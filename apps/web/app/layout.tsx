@@ -1,12 +1,13 @@
 import { dir } from "i18next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
-import { headers, cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import React from "react";
 
 import { getLocale } from "@calcom/features/auth/lib/getLocale";
 import { loadTranslations } from "@calcom/lib/server/i18n";
 import { IconSprites } from "@calcom/ui/components/icon";
+import { TooltipProvider } from "@calcom/ui/tooltip";
 
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 
@@ -153,7 +154,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <Providers isEmbed={isEmbed} nonce={nonce}>
           <AppRouterI18nProvider translations={translations} locale={locale} ns={ns}>
-            {children}
+            <TooltipProvider>{children}</TooltipProvider>
           </AppRouterI18nProvider>
         </Providers>
       </body>

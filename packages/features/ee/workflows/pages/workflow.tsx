@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { WorkflowStep } from "@prisma/client";
+import { GetUserApiKey } from "ee/workflows/pages/desk360.service";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,10 +48,14 @@ type PageProps = {
 function WorkflowPage({ workflow: workflowId }: PageProps) {
   const { t, i18n } = useLocale();
   const session = useSession();
+  console.log("🚀 ~ WorkflowPage ~ session:", session);
 
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isAllDataLoaded, setIsAllDataLoaded] = useState(false);
   const [isMixedEventType, setIsMixedEventType] = useState(false); //for old event types before team workflows existed
+
+  const integration = GetUserApiKey();
+  // console.log("🚀 ~ WorkflowPage ~ integration:", integration);
 
   const form = useForm<FormValues>({
     mode: "onBlur",
