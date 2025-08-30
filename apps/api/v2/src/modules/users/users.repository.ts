@@ -3,7 +3,7 @@ import { PrismaWriteService } from "@/modules/prisma/prisma-write.service";
 import { CreateManagedUserInput } from "@/modules/users/inputs/create-managed-user.input";
 import { UpdateManagedUserInput } from "@/modules/users/inputs/update-managed-user.input";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import type { Profile, User, Team, Prisma } from "@prisma/client";
+import type { Prisma, Profile, Team, User } from "@prisma/client";
 import { CreationSource } from "@prisma/client";
 
 export type UserWithProfile = User & {
@@ -404,6 +404,19 @@ export class UsersRepository {
       },
       select: {
         email: true,
+      },
+    });
+  }
+
+  async findUserDesk360ApiKeyWithUserId(id: number) {
+    return await this.dbRead.prisma.desk360.findFirst({
+      where: {
+        user: {
+          id,
+        },
+      },
+      select: {
+        apiKey: true,
       },
     });
   }

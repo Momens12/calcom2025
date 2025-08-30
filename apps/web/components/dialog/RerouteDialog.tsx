@@ -2,8 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { z } from "zod";
 
 import FormInputFields, {
@@ -20,7 +19,7 @@ import { createBooking } from "@calcom/features/bookings/lib/create-booking";
 import { Dialog } from "@calcom/features/components/controlled-dialog";
 import { useBookerUrl } from "@calcom/lib/hooks/useBookerUrl";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import type { EventType, User, Team, Attendee, Booking as PrismaBooking } from "@calcom/prisma/client";
+import type { Attendee, EventType, Booking as PrismaBooking, Team, User } from "@calcom/prisma/client";
 import { SchedulingType } from "@calcom/prisma/enums";
 import type { bookingMetadataSchema } from "@calcom/prisma/zod-utils";
 import type { RouterOutputs } from "@calcom/trpc/react";
@@ -29,7 +28,7 @@ import type { Ensure } from "@calcom/types/utils";
 import { Button } from "@calcom/ui/components/button";
 import { DialogContent, DialogFooter, DialogHeader } from "@calcom/ui/components/dialog";
 import { showToast } from "@calcom/ui/components/toast";
-import { Tooltip } from "@calcom/ui/components/tooltip";
+import { Tooltip, TooltipProvider } from "@calcom/ui/components/tooltip";
 
 const enum ReroutingStatusEnum {
   REROUTING_NOT_INITIATED = "not_initiated",
@@ -587,11 +586,13 @@ const NewRoutingManager = ({
             </a>
           </span>
           <span className="text-default" data-testid="reroute-preview-hosts">
-            <Tooltip content="Includes fixed hosts always and assumes that all the team members mentioned here are assigned to the event">
-              <span className="font-semibold">
-                {isRoundRobinScheduling ? t("reroute_preview_possible_host") : t("hosts")}:
-              </span>
-            </Tooltip>{" "}
+            <TooltipProvider>
+              <Tooltip content="Includes fixed hosts always and assumes that all the team members mentioned here are assigned to the event">
+                <span className="font-semibold">
+                  {isRoundRobinScheduling ? t("reroute_preview_possible_host") : t("hosts")}:
+                </span>
+              </Tooltip>{" "}
+            </TooltipProvider>
             {bookingHosts()}
           </span>
         </div>

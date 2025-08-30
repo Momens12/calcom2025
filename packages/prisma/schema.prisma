@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DATABASE_DIRECT_URL")
 }
 
 generator client {
@@ -443,8 +443,11 @@ model User {
   whitelistWorkflows             Boolean                       @default(false)
   calAiPhoneNumbers              CalAiPhoneNumber[]
   agents                         Agent[]
+  desk360                        Desk360?                      @relation("desk360", references: [id], fields: [desk360Id])
+  desk360Id                      Int?
 
   @@unique([email])
+  @@unique([desk360Id])
   @@unique([email, username])
   @@unique([username, organizationId])
   @@unique([movedToProfileId])
@@ -1715,7 +1718,7 @@ model BookingDenormalized {
 }
 
 view BookingTimeStatusDenormalized {
-  id             Int           @id @unique
+  id             Int           @unique
   uid            String
   eventTypeId    Int?
   title          String
@@ -2510,4 +2513,10 @@ model CalAiPhoneNumber {
   @@index([teamId])
   @@index([inboundAgentId])
   @@index([outboundAgentId])
+}
+
+model Desk360 {
+  id     Int     @id @default(autoincrement())
+  apiKey String? @unique
+  user   User?   @relation("desk360")
 }
